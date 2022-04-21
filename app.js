@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { login } = require("./controllers/user");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 });
 // конец хард-коддинга
 
+app.post('/signin', login);
 
 
 app.use('/movies', require('./routes/movies'));
