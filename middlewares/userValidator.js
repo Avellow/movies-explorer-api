@@ -15,7 +15,15 @@ const userSignupValidator = celebrate({
   }),
 });
 
+const userUpdateValidator = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    name: Joi.string().required().min(4),
+  }),
+});
+
 module.exports = {
   userSignupValidator,
   userSigninValidator,
+  userUpdateValidator,
 };

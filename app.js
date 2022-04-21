@@ -20,6 +20,7 @@ app.post('/signin', userSigninValidator, login);
 
 app.use(auth);
 
+app.use('/users', require('./routes/users'));
 app.use('/movies', require('./routes/movies'));
 
 app.use(errorLogger);
