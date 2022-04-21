@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { login, createUser } = require('./controllers/user');
 const { userSigninValidator, userSignupValidator } = require('./middlewares/userValidator');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
 
 app.post('/signup', userSignupValidator, createUser);
 app.post('/signin', userSigninValidator, login);
+
+app.use(auth);
 
 app.use('/movies', require('./routes/movies'));
 
