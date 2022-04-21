@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const { login, createUser } = require('./controllers/user');
 const { userSigninValidator, userSignupValidator } = require('./middlewares/userValidator');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -12,14 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// временный хард-код. Удалить при реализации авторизации
-app.use((req, res, next) => {
-  req.user = {
-    _id: '625fe0fd077c3e9c8339dd36',
-  };
-  next();
-});
-// конец хард-коддинга
+app.use(requestLogger);
 
 app.post('/signup', userSignupValidator, createUser);
 app.post('/signin', userSigninValidator, login);
@@ -27,6 +21,8 @@ app.post('/signin', userSigninValidator, login);
 app.use(auth);
 
 app.use('/movies', require('./routes/movies'));
+
+app.use(errorLogger);
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
