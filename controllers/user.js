@@ -2,10 +2,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const NotFoundError = require('../errors/NotFoundError');
+const DuplicateError = require('../errors/DuplicateError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const sendUserInfo = ({ email, name }, res) => res.send({ email, name });
+
+const checkDuplicateEmailError = (e, next) => {
+  if (e.code === 11000) {
+    return next(new DuplicateError('Пользователь с таким email уже существует!'));
+  }
+  return next(e);
+};
 
 module.exports.getUser = (req, res, next) => {
   User
@@ -34,14 +42,7 @@ module.exports.updateUser = (req, res, next) => {
       throw new NotFoundError('Проблема при обновлении информации о пользователе');
     })
     .then((user) => sendUserInfo(user, res))
-    .catch((e) => {
-      if (e.code === 11000) {
-        const err = new Error('Пользователь с таким email уже существует!');
-        err.statusCode = 409;
-        next(err);
-      }
-      next(e);
-    });
+    .catch((e) => checkDuplicateEmailError(e, next));
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -59,14 +60,7 @@ module.exports.createUser = (req, res, next) => {
     ))
     .then(({ _id }) => User.findById(_id))
     .then((user) => sendUserInfo(user, res))
-    .catch((e) => {
-      if (e.code === 11000) {
-        const err = new Error('Пользователь с таким email уже существует!');
-        err.statusCode = 409;
-        next(err);
-      }
-      next(e);
-    });
+    .catch((e) => checkDuplicateEmailError(e, next));
 };
 
 module.exports.login = (req, res, next) => {
