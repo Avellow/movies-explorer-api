@@ -11,6 +11,8 @@ const errorHandler = (err, req, res, next) => {
     .send({
       message: `${statusCode} ${message}`,
     });
+
+  next();
 };
 
 module.exports = errorHandler;
