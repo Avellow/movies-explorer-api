@@ -35,8 +35,8 @@ app.use(errorLogger);
 
 app.use(errors());
 
+app.use('/', (req, res) => res.status(404).send({ message: '404 Ресурс не найден' }));
 app.use(errorHandler);
-app.use((req, res) => res.status(404).send({ message: '404 Ресурс не найден' }));
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
