@@ -34,7 +34,14 @@ module.exports.updateUser = (req, res, next) => {
       throw new NotFoundError('Проблема при обновлении информации о пользователе');
     })
     .then((user) => sendUserInfo(user, res))
-    .catch(next);
+    .catch((e) => {
+      if (e.code === 11000) {
+        const err = new Error('Пользователь с таким email уже существует!');
+        err.statusCode = 409;
+        next(err);
+      }
+      next(e);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
