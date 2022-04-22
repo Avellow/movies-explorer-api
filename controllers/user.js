@@ -5,13 +5,15 @@ const NotFoundError = require('../errors/NotFoundError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+const sendUserInfo = ({ email, name }, res) => res.send({ email, name });
+
 module.exports.getUser = (req, res, next) => {
   User
     .findById(req.user._id)
     .orFail(() => {
       throw new NotFoundError('Запрашиваемый пользователь не найден');
     })
-    .then((user) => res.send(user))
+    .then((user) => sendUserInfo(user, res))
     .catch(next);
 };
 
@@ -31,7 +33,7 @@ module.exports.updateUser = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Проблема при обновлении информации о пользователе');
     })
-    .then((user) => res.send(user))
+    .then((user) => sendUserInfo(user, res))
     .catch(next);
 };
 
@@ -49,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
         })
     ))
     .then(({ _id }) => User.findById(_id))
-    .then((user) => res.send(user))
+    .then((user) => sendUserInfo(user, res))
     .catch((e) => {
       if (e.code === 11000) {
         const err = new Error('Пользователь с таким email уже существует!');
