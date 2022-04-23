@@ -39,7 +39,7 @@ app.use(errors());
 app.use('/', (req, res) => res.status(404).send({ message: '404 Ресурс не найден' }));
 app.use(errorHandler);
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect('mongodb://localhost:27017/moviesdb');
 
 app.listen(PORT, () => {
   console.log(`App listening on PORT ${PORT}`);
