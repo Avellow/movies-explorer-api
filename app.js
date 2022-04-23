@@ -16,7 +16,7 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-  origin: 'https://m.nomoredomains.work', // заменить на реальный домен
+  origin: 'https://movies-expl.nomoredomains.work',
   credentials: true,
 }));
 
