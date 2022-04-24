@@ -25,6 +25,13 @@ const movieValidator = celebrate({
   }),
 });
 
+const movieIdParamValidator = celebrate({
+  params: Joi.object().keys({
+    movieId: Joi.string().hex().length(24),
+  }),
+});
+
 module.exports = {
   movieValidator,
+  movieIdParamValidator,
 };
