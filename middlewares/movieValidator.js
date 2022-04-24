@@ -19,7 +19,7 @@ const movieValidator = celebrate({
     image: Joi.string().required().custom(checkUrl, 'image link validation'),
     trailerLink: Joi.string().required().custom(checkUrl, 'trailer link validation'),
     thumbnail: Joi.string().required().custom(checkUrl, 'thumbnail link validation'),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().integer().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
