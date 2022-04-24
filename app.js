@@ -11,7 +11,7 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_NAME = 'testmoviebd' } = process.env;
 const app = express();
 app.use(helmet());
 
@@ -39,7 +39,7 @@ app.use(errors());
 app.use('/', (req, res) => res.status(404).send({ message: '404 Ресурс не найден' }));
 app.use(errorHandler);
 
-mongoose.connect('mongodb://localhost:27017/moviesdb');
+mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`);
 
 app.listen(PORT, () => {
   console.log(`App listening on PORT ${PORT}`);
