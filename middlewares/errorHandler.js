@@ -1,7 +1,9 @@
+const { SERVER_PROBLEM_MESSAGE } = require('../utils/constants');
+
 const errorHandler = (err, req, res, next) => {
   const {
     statusCode = 500,
-    message = 'Произошла ошибка на сервере',
+    message = SERVER_PROBLEM_MESSAGE,
   } = err;
 
   console.log(err.stack || err);

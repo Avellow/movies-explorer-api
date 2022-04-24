@@ -1,6 +1,7 @@
 const Movie = require('../models/movies');
 const NotFoundError = require('../errors/NotFoundError');
 const PermissionError = require('../errors/PermissionError');
+const { NO_RIGHT_MESSAGE, NOT_FOUND_MOVIE_MESSAGE } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie
@@ -49,14 +50,14 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie
     .findById({ _id: movieId })
     .orFail(() => {
-      throw new NotFoundError(`Фильм с id ${movieId} не найден!`);
+      throw new NotFoundError(NOT_FOUND_MOVIE_MESSAGE(movieId));
     })
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        throw new PermissionError('Отказано в удалении. Пользователь не является владельцом!');
+        throw new PermissionError(NO_RIGHT_MESSAGE);
       }
       return Movie.findByIdAndRemove({ _id: movieId });
     })
-    .then((movie) => res.send({ message: 'Успешно удален фильм:', data: movie }))
+    .then((movie) => res.send({ data: movie }))
     .catch(next);
 };

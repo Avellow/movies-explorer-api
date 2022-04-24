@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { INVALID_LINK_MESSAGE } = require('../utils/constants');
 
 function validateLink(v) {
   const regex = /http[s]?:\/\/(www.)?[\S]+\.[a-z]+[\S]*/gi;
@@ -31,7 +32,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: validateLink,
-      message: 'Неправильный формат ссылки',
+      message: INVALID_LINK_MESSAGE,
     },
   },
   trailerLink: {
@@ -39,7 +40,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: validateLink,
-      message: 'Неправильный формат ссылки',
+      message: INVALID_LINK_MESSAGE,
     },
   },
   thumbnail: {
@@ -47,7 +48,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: validateLink,
-      message: 'Неправильный формат ссылки',
+      message: INVALID_LINK_MESSAGE,
     },
   },
   owner: {

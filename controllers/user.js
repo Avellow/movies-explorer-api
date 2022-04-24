@@ -2,24 +2,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const NotFoundError = require('../errors/NotFoundError');
-const DuplicateError = require('../errors/DuplicateError');
+const {
+  NOT_FOUND_USER_MESSAGE,
+  USER_UPDATE_PROBLEM_MESSAGE,
+  sendUserInfo,
+  checkDuplicateEmailError,
+} = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-
-const sendUserInfo = ({ email, name }, res) => res.send({ email, name });
-
-const checkDuplicateEmailError = (e, next) => {
-  if (e.code === 11000) {
-    return next(new DuplicateError('Пользователь с таким email уже существует!'));
-  }
-  return next(e);
-};
 
 module.exports.getUser = (req, res, next) => {
   User
     .findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(NOT_FOUND_USER_MESSAGE);
     })
     .then((user) => sendUserInfo(user, res))
     .catch(next);
@@ -39,7 +35,7 @@ module.exports.updateUser = (req, res, next) => {
       },
     )
     .orFail(() => {
-      throw new NotFoundError('Проблема при обновлении информации о пользователе');
+      throw new NotFoundError(USER_UPDATE_PROBLEM_MESSAGE);
     })
     .then((user) => sendUserInfo(user, res))
     .catch((e) => checkDuplicateEmailError(e, next));
