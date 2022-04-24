@@ -10,10 +10,13 @@ const { userSigninValidator, userSignupValidator } = require('./middlewares/user
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
+const limiter = require('./configs/ipLimiter');
 
 const { PORT = 3000, DB_NAME = 'testmoviebd' } = process.env;
 const app = express();
+
 app.use(helmet());
+app.use(limiter);
 
 app.use(cors({
   origin: 'https://movies-expl.nomoredomains.work',
